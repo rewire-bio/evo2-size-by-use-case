@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "sources": [
+    {"id": "brixi2026", "title": "Genome modelling and design across all domains of life with Evo 2 (Brixi et al., Nature 2026)", "url": "https://www.nature.com/articles/s41586-026-10176-5", "full_text": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC13128491/fullTextXML", "retrieved_at": "2026-10-09"},
+    {"id": "evo2-sd1", "title": "Evo 2 Supplementary Data 1: human variant effect prediction results (41586_2026_10176_MOESM3_ESM.xlsx, md5 653a2561dc0a31d4f0faf58db833a317)", "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC13128491/supplementaryFiles", "retrieved_at": "2026-10-09"},
+    {"id": "arc-20b", "title": "Evo 2 20B release notes and model-size comparison (Arc, v0.5.0, 28 February 2026; detailed baselines at garykbrixi/evo2-20b-readme commit 0bfdb39)", "url": "https://github.com/garykbrixi/evo2-20b-readme/tree/0bfdb398490d9b51e6d00e0be15e3bba728573a3", "retrieved_at": "2026-10-09"},
+    {"id": "arc-repo", "title": "ArcInstitute/evo2 README at commit 53f1959 (FP8 and Transformer Engine requirements)", "url": "https://github.com/ArcInstitute/evo2/tree/53f195997257c56c00e5ef8d33a54f5baad143a6", "retrieved_at": "2026-10-09"},
+    {"id": "arc-issue-67", "title": "evo2 issue 67: Expected a cuda device, but got: cpu", "url": "https://github.com/ArcInstitute/evo2/issues/67", "retrieved_at": "2026-10-09"},
+    {"id": "arc-issue-101", "title": "evo2 issue 101: GPUs other than H100", "url": "https://github.com/ArcInstitute/evo2/issues/101", "retrieved_at": "2026-10-07"},
+    {"id": "li2025", "title": "A Benchmark of Evo2 Genomic AI Models for Efficient and Practical Deployment (Li et al., bioRxiv 2025)", "url": "https://www.biorxiv.org/content/10.1101/2025.09.10.675279", "retrieved_at": "2026-10-09"},
+    {"id": "evo2-ops", "title": "rewire-bio/evo2-cloud-operations: Evo 2 7B on H100 and L40S (study in progress; phased results 9 October 2026)", "url": "https://github.com/rewire-bio/evo2-cloud-operations", "retrieved_at": "2026-10-09"},
+    {"id": "sun2026", "title": "Comprehensive review and assessment of multi-species splicing variant prediction (Sun et al., Briefings in Bioinformatics 2026, bbag329)", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13283436/", "retrieved_at": "2026-10-09"},
+    {"id": "gpn-star", "title": "Predicting functional constraints across evolutionary timescales with phylogeny-informed genomic language models (GPN-Star, bioRxiv 2025; Nature 2026)", "url": "https://www.biorxiv.org/content/10.1101/2025.09.21.677619v1", "retrieved_at": "2026-10-09"},
+    {"id": "traitgym", "title": "Benchmarking DNA Sequence Models for Causal Regulatory Variant Prediction in Human Genetics (TraitGym, bioRxiv 2025)", "url": "https://www.biorxiv.org/content/10.1101/2025.02.11.637758", "retrieved_at": "2026-10-09"},
+    {"id": "evoeval", "title": "arcinstitute/evoeval: variant-effect evaluation tables and standard subsets (MIT), revision 1ce96bd", "url": "https://huggingface.co/datasets/arcinstitute/evoeval/tree/1ce96bdf13fc1fd4b19ec484fd412578114f535b", "retrieved_at": "2026-10-09"},
+    {"id": "guntoro2026", "title": "Screening of Biosecurity Features in Metagenomic Data with Evo 2 Probes (arXiv 2607.14070)", "url": "https://arxiv.org/abs/2607.14070", "retrieved_at": "2026-10-09"},
+    {"id": "nim-prereq", "title": "Evo 2 NIM prerequisites and support matrix", "url": "https://docs.nvidia.com/nim/bionemo/evo2/latest/prerequisites.html", "retrieved_at": "2026-10-07"},
+    {"id": "amp-365", "title": "rewire.it issue 365: AMP use-case coverage", "url": "https://github.com/rewire-bio/rewire.it/issues/365", "retrieved_at": "2026-10-09"}
+  ]
+}
