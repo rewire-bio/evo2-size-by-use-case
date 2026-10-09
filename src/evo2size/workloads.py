@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import csv
-import hashlib
 import json
 import time
 from pathlib import Path
@@ -14,43 +13,7 @@ from . import pins
 from .genome import read_first_fasta_record, read_variants, read_window_pairs, snv_windows
 
 
-def sha256_file(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        while chunk := handle.read(16 * 1024 * 1024):
-            digest.update(chunk)
-    return digest.hexdigest()
-
-
-def fetch_weights(name: str, cache_dir: Path) -> Path:
-    """Download a checkpoint at its pinned revision, check every file's hash, and join parts.
-
-    Refuses to return a path unless every hash matches, because an unverified pickle could run code.
-    """
-    from huggingface_hub import hf_hub_download
-
-    pin = pins.WEIGHTS[name]
-    paths = []
-    for filename, sha256 in pin["files"].items():
-        path = Path(hf_hub_download(repo_id=pin["repo_id"], filename=filename, revision=pin["revision"],
-                                    cache_dir=str(cache_dir)))
-        actual = sha256_file(path)
-        if actual != sha256:
-            raise RuntimeError(f"SHA-256 mismatch for {pin['repo_id']}/{filename}: expected {sha256}, got {actual}")
-        paths.append(path)
-    if len(paths) == 1:
-        return paths[0]
-    joined = cache_dir / f"{name}.pt"
-    with joined.open("wb") as out:
-        for path in paths:
-            with path.open("rb") as part:
-                while chunk := part.read(64 * 1024 * 1024):
-                    out.write(chunk)
-            # The hub returns a symlink into its blob store; free the blob, not just the link.
-            blob = path.resolve()
-            path.unlink()
-            blob.unlink(missing_ok=True)
-    return joined
+from .weights import fetch_weights
 
 
 def synchronize(device: str) -> None:

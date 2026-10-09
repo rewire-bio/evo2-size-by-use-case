@@ -24,3 +24,8 @@ Chronological record of every launch and probe, including failures. Times are UT
   launcher at 18:42; confirmed absent through the Runpod API.
 - Amendment 1 at the owner's request: the CPU tiers (T1a, T1b) wait until the GPU tiers have
   finished. T2's hour limit rises to 7 hours after the smoke-test timing.
+- Amendment 1 approved by Tim Richardson (approval `88ee0108`).
+- 19:0x. Recorded run held at the owner's request until another study's pod finishes and the
+  Runpod balance is topped up. Pre-flight (`scripts/preflight.py`): balance USD 33.80 against USD
+  69.60 needed (planned USD 43.60 for T2 to T4 plus one failed T4 attempt); one evo2-cloud-operations
+  pod still running; L4, H100 and H200 Secure Cloud stock LOW.

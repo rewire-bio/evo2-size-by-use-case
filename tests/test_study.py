@@ -211,3 +211,52 @@ class CollectTests(unittest.TestCase):
         self.assertIn("auroc", g3["comparison"]["splice_site"])
         self.assertAlmostEqual(operations["T2"]["tasks"]["brca1:evo2_7b"]["usd_per_1000_variants"],
                                1000 / len(brca1) * 0.59, places=3)
+
+
+class WeightTests(unittest.TestCase):
+    """Shard joining and hash refusal, with a fake hub laid out like huggingface_hub's cache."""
+
+    def fake_hub(self, root: Path, contents: dict[str, bytes]):
+        blobs, snapshot = root / "blobs", root / "snapshot"
+        blobs.mkdir(parents=True)
+        snapshot.mkdir()
+        for filename, data in contents.items():
+            blob = blobs / filename
+            blob.write_bytes(data)
+            (snapshot / filename).symlink_to(blob)
+
+        def download(repo_id, filename, revision, cache_dir):
+            return str(snapshot / filename)
+        return download
+
+    def test_40b_parts_are_checked_joined_and_freed(self):
+        import hashlib
+        import tempfile
+        from unittest import mock
+
+        from evo2size import pins, weights
+
+        parts = {"evo2_40b.pt.part0": b"first-", "evo2_40b.pt.part1": b"second"}
+        pinned = {"repo_id": "x/evo2_40b", "revision": "r",
+                  "files": {k: hashlib.sha256(v).hexdigest() for k, v in parts.items()}}
+        with tempfile.TemporaryDirectory() as tmp, mock.patch.dict(pins.WEIGHTS, {"evo2_40b": pinned}):
+            root = Path(tmp)
+            joined = weights.fetch_weights("evo2_40b", root, download=self.fake_hub(root / "hub", parts))
+            self.assertEqual(joined.read_bytes(), b"first-second")
+            self.assertEqual(list((root / "hub/blobs").iterdir()), [])
+
+    def test_hash_mismatch_refuses_to_load(self):
+        import tempfile
+        from unittest import mock
+
+        from evo2size import pins, weights
+
+        pinned = {"repo_id": "x/evo2_20b", "revision": "r", "files": {"evo2_20b.pt": "0" * 64}}
+        with tempfile.TemporaryDirectory() as tmp, mock.patch.dict(pins.WEIGHTS, {"evo2_20b": pinned}):
+            root = Path(tmp)
+            with self.assertRaises(RuntimeError):
+                weights.fetch_weights("evo2_20b", root, download=self.fake_hub(root / "hub", {"evo2_20b.pt": b"x"}))
+
+    def test_every_pinned_model_has_an_expected_forward_loss(self):
+        from evo2size import pins
+        self.assertEqual(set(pins.WEIGHTS), set(pins.FORWARD_TEST_LOSS))
