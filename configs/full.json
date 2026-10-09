@@ -4,7 +4,10 @@
   "study_kind": "evo2_size_by_use_case",
   "image": "ghcr.io/rewire-bio/evo2-cloud-operations@sha256:22970720ff8bc05a00460a6066a70ed71951001aa52965141591a0ca6dcc968b",
   "max_attempts": 2,
-  "bootstrap": {"n": 2000, "seed": 7},
+  "bootstrap": {
+    "n": 2000,
+    "seed": 7
+  },
   "criteria": {
     "min_spearman": 0.99,
     "max_auroc_abs_difference": 0.01,
@@ -12,30 +15,72 @@
   },
   "tiers": [
     {
-      "id": "T1a", "gap": "G1", "chain": "cpu", "label": "Runpod CPU pod cpu3g, 32 vCPU, 128 GB: 7B forward-pass test",
-      "env": {"CPU_FLAVOR": "cpu3g", "VCPUS": 32},
-      "device": "cpu", "tasks": "forward:evo2_7b", "max_hours": 2, "disk_gb": 100
+      "id": "T1a",
+      "gap": "G1",
+      "chain": "cpu",
+      "label": "Runpod CPU pod cpu3g, 32 vCPU, 128 GB: 7B forward-pass test",
+      "env": {
+        "CPU_FLAVOR": "cpu3g",
+        "VCPUS": 32
+      },
+      "device": "cpu",
+      "tasks": "forward:evo2_7b",
+      "max_hours": 2,
+      "disk_gb": 100,
+      "deferred": "amendment 1: CPU tiers wait until the GPU tiers have finished"
     },
     {
-      "id": "T1b", "gap": "G1", "chain": "cpu", "label": "Runpod CPU pod cpu3g, 32 vCPU, 128 GB: 7B on 60 BRCA1 SNVs",
-      "env": {"CPU_FLAVOR": "cpu3g", "VCPUS": 32}, "requires_forward_test_pass": "T1a",
-      "device": "cpu", "tasks": "brca1_subsample:evo2_7b", "time_limit_s": 14400, "max_hours": 6, "disk_gb": 100
+      "id": "T1b",
+      "gap": "G1",
+      "chain": "cpu",
+      "label": "Runpod CPU pod cpu3g, 32 vCPU, 128 GB: 7B on 60 BRCA1 SNVs",
+      "env": {
+        "CPU_FLAVOR": "cpu3g",
+        "VCPUS": 32
+      },
+      "requires_forward_test_pass": "T1a",
+      "device": "cpu",
+      "tasks": "brca1_subsample:evo2_7b",
+      "time_limit_s": 14400,
+      "max_hours": 6,
+      "disk_gb": 100,
+      "deferred": "amendment 1: CPU tiers wait until the GPU tiers have finished"
     },
     {
-      "id": "T2", "gap": "G2", "label": "Runpod L4 24 GB: 7B on 3,893 BRCA1 SNVs",
-      "env": {"GPU_TYPE_IDS": "[\"NVIDIA L4\"]"},
-      "device": "cuda", "tasks": "forward:evo2_7b,brca1:evo2_7b", "max_hours": 6, "disk_gb": 100
+      "id": "T2",
+      "gap": "G2",
+      "label": "Runpod L4 24 GB: 7B on 3,893 BRCA1 SNVs",
+      "env": {
+        "GPU_TYPE_IDS": "[\"NVIDIA L4\"]"
+      },
+      "device": "cuda",
+      "tasks": "forward:evo2_7b,brca1:evo2_7b",
+      "max_hours": 7,
+      "disk_gb": 100
     },
     {
-      "id": "T3", "gap": "G3", "label": "Runpod H100 80 GB SXM: 7B and 20B on 4,644 ClinVar noncoding non-SNVs",
-      "env": {"GPU_TYPE_IDS": "[\"NVIDIA H100 80GB HBM3\"]"},
-      "device": "cuda", "tasks": "forward:evo2_7b,indels:evo2_7b,forward:evo2_20b,indels:evo2_20b",
-      "max_hours": 6, "disk_gb": 200
+      "id": "T3",
+      "gap": "G3",
+      "label": "Runpod H100 80 GB SXM: 7B and 20B on 4,644 ClinVar noncoding non-SNVs",
+      "env": {
+        "GPU_TYPE_IDS": "[\"NVIDIA H100 80GB HBM3\"]"
+      },
+      "device": "cuda",
+      "tasks": "forward:evo2_7b,indels:evo2_7b,forward:evo2_20b,indels:evo2_20b",
+      "max_hours": 6,
+      "disk_gb": 200
     },
     {
-      "id": "T4", "gap": "G3", "label": "Runpod H200 141 GB: 40B on 4,644 ClinVar noncoding non-SNVs",
-      "env": {"GPU_TYPE_IDS": "[\"NVIDIA H200\"]"},
-      "device": "cuda", "tasks": "forward:evo2_40b,indels:evo2_40b", "max_hours": 8, "disk_gb": 300
+      "id": "T4",
+      "gap": "G3",
+      "label": "Runpod H200 141 GB: 40B on 4,644 ClinVar noncoding non-SNVs",
+      "env": {
+        "GPU_TYPE_IDS": "[\"NVIDIA H200\"]"
+      },
+      "device": "cuda",
+      "tasks": "forward:evo2_40b,indels:evo2_40b",
+      "max_hours": 8,
+      "disk_gb": 300
     }
   ]
 }

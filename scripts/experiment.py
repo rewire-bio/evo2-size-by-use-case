@@ -113,7 +113,7 @@ def main() -> None:
     subprocess.run([sys.executable, str(ROOT / "scripts/prepare_inputs.py")], check=True)
 
     if not args.collect_only:
-        tiers = config["tiers"]
+        tiers = [t for t in config["tiers"] if not t.get("deferred")]
         if args.tiers:
             wanted = set(args.tiers.split(","))
             tiers = [t for t in tiers if t["id"] in wanted]

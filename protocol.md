@@ -168,7 +168,7 @@ absolute tolerance 0.01 and relative tolerance 0. Timings and costs are recorded
   T3 about 14, T4 about 26. The reproduction costs about the same again.
 - **Self-termination:** the launcher deletes each pod when it exits, and a watchdog in the
   launcher deletes it after the tier's hour limit (T1a 2 hours, T4 8 hours to allow for the 82 GB
-  40B download, others 6 hours). The image's own in-pod backstop calls Runpod's retired v1
+  40B download, T2 7 hours, others 6 hours). The image's own in-pod backstop calls Runpod's retired v1
   endpoint and is not relied on. Pods are checked through the Runpod API after every run.
 - At most 2 attempts per tier per phase. Under 2 GB of retained evidence. No weights, windows or
   embeddings are committed.
