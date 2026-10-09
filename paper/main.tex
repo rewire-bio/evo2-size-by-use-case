@@ -1,0 +1,45 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage[hidelinks]{hyperref}
+\input{generated/metrics.tex}
+\title{probe}
+\author{Computational Study Team}
+\date{}
+\begin{document}
+\maketitle
+\begin{abstract}
+This synthetic validation fixture exercises a reproducible computational research
+workflow using a known analytical reference. A fixed-seed Monte Carlo estimate of
+$\pi$ from \SampleCount{} points is \PiEstimate{}, with absolute error
+\AbsoluteError{}. This is an execution fixture, not a novel research finding.
+\end{abstract}
+\section{Question and methods}
+We sample independent coordinate pairs uniformly in the unit square using Python
+3.11.13's seeded pseudorandom generator, with seed \SeedValue{}. Four times the
+fraction satisfying $x^2+y^2\leq1$ estimates $\pi$. The reported plug-in standard
+error is $4\sqrt{\hat p(1-\hat p)/n}$. This numerical-integration example follows
+the general Monte Carlo approach described by Metropolis and Ulam
+\cite{metropolis1949}. The sample count and seed are fixed before execution.
+\section{Results}
+\begin{center}
+\input{generated/table.tex}
+\end{center}
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{figures/convergence.pdf}
+\caption{Cumulative estimates at fixed checkpoints. The reference line is the
+analytical value of $\pi$; a single trajectory does not establish convergence rates.}
+\end{figure}
+\section{Reproduction and limitations}
+Run \texttt{make reproduce} in a clean checkout to regenerate the experiment,
+figures, tables, and this paper. The repository pins the Python interpreter and
+Tectonic engine; the run record identifies inputs and output hashes. Reproduction
+compares numeric results at prespecified tolerances, not PDF bytes.
+This single synthetic run validates the execution pathway only. Its standard
+error describes sampling variability, and no significance or novelty claim is
+made. An independent evidence review is required before verified study status.
+\bibliographystyle{plain}
+\bibliography{references}
+\end{document}

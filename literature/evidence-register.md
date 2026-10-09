@@ -130,8 +130,8 @@ scores DNA sequences, so it does not address them. Not tested.
 | G2 | Does 7B on a 24 GB L4 match H100 scores, and what does it cost per 1,000 variants? | 7B | L4 24 GB | BRCA1, 3,893 SNVs | about USD 3 |
 | G3 | Does the one-GPU 20B keep the 40B advantage on noncoding indels? | 20B, 40B (7B as a check) | H100; H200 for 40B | ClinVar noncoding indels, matched subset | about USD 20 to 30 |
 
-For G1 and G2, the reference is the per-variant 7B H100 scores from evo2-cloud-operations, once
-its recorded run is published. G3 needs 40B, because no per-variant 40B indel scores are public
+For G1 and G2, the reference is the per-variant 7B H100 scores from evo2-cloud-operations
+(recorded run `b75c67aa`, platform P3), pinned in `data/reference/`. G3 needs 40B, because no per-variant 40B indel scores are public
 and a matched comparison needs the same variants.
 
 Not run: anything on 1B, 7B against 40B on SNVs, splicing, RNA viruses, and the read-level

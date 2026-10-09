@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "title": "Which clinical genomics use cases can run on a smaller Evo 2 model?",
+  "question": "For the diagnostic use cases raised for the AMP 2026 session, what is the smallest Evo 2 model that gives the same answer as Evo 2 40B, and what is the cheapest hardware that reproduces that model's scores?",
+  "validation_fixture": false,
+  "experiment": {
+    "command": ["uv", "run", "--frozen", "python", "scripts/experiment.py", "--config", "{config}", "--output", "{output}"],
+    "inputs": ["src", "scripts", "cloud", "configs", "uv.lock", "pyproject.toml", ".python-version", "Makefile", "data/manifest.json"],
+    "outputs": ["results.json", "operations.json", "provenance.json", "launch-outcomes.json", "tiers"],
+    "results_file": "results.json"
+  },
+  "reproduction": {
+    "command": ["make", "reproduce"],
+    "results_file": "results/full/results.json",
+    "paper_file": "paper/build/main.pdf",
+    "abs_tolerance": 0.01,
+    "rel_tolerance": 0.0
+  },
+  "budgets": {
+    "experiment_seconds": 64800,
+    "reproduction_seconds": 72000,
+    "worker_seconds": 1800,
+    "max_worker_calls": 30,
+    "max_attempts": 2,
+    "max_storage_mb": 2000
+  },
+  "paper": {"source": "paper/main.tex", "pdf": "paper/build/main.pdf"}
+}

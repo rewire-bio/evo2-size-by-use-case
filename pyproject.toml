@@ -1,0 +1,15 @@
+[project]
+name = "evo2-size-by-use-case"
+version = "0.1.0"
+description = "Which clinical genomics use cases can run on a smaller Evo 2 model, and on what hardware"
+requires-python = "==3.11.13"
+dependencies = [
+    "numpy==2.3.3",
+    "openpyxl==3.1.5",
+    "pandas==2.3.3",
+    "pyarrow==21.0.0",
+    "matplotlib==3.10.6",
+]
+
+[tool.uv]
+package = false

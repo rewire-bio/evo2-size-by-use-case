@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "datasets": [
+    {
+      "path": "data/raw/41586_2018_461_MOESM3_ESM.xlsx",
+      "source": "https://raw.githubusercontent.com/ArcInstitute/evo2/53f195997257c56c00e5ef8d33a54f5baad143a6/notebooks/brca1/41586_2018_461_MOESM3_ESM.xlsx",
+      "sha256": "0100fc651b6ec6015f02a5813660afdcf9cf3969790992104e99e74f7348d0fd",
+      "license": "Findlay et al. 2018, Nature 562:217-222, Supplementary Table; redistributed in ArcInstitute/evo2 (Apache-2.0 repository). Not redistributed here.",
+      "provenance": "BRCA1 saturation genome editing classes for 3,893 SNVs. Same file as evo2-cloud-operations."
+    },
+    {
+      "path": "data/raw/GRCh37.p13_chr17.fna.gz",
+      "source": "https://raw.githubusercontent.com/ArcInstitute/evo2/53f195997257c56c00e5ef8d33a54f5baad143a6/notebooks/brca1/GRCh37.p13_chr17.fna.gz",
+      "sha256": "d50b4616790d7352c5025bcf9070a4de4f76bab41c6d2dcd504382c67c5534fb",
+      "license": "NCBI GRCh37.p13 reference assembly, public domain; copy distributed in ArcInstitute/evo2.",
+      "provenance": "Human chromosome 17, GRCh37.p13, as used by Arc's BRCA1 notebook and evo2-cloud-operations."
+    },
+    {
+      "path": "data/raw/prompts.csv",
+      "source": "https://raw.githubusercontent.com/ArcInstitute/evo2/53f195997257c56c00e5ef8d33a54f5baad143a6/evo2/test/data/prompts.csv",
+      "sha256": "371015ef6e1c87bfa2cfe548e3025230f0fdd1a2b63af8a7e110b84341e0493c",
+      "license": "ArcInstitute/evo2, Apache-2.0.",
+      "provenance": "Four test sequences used by Arc's forward-pass correctness test."
+    },
+    {
+      "path": "data/raw/evoeval_clinvar.parquet",
+      "source": "https://huggingface.co/datasets/arcinstitute/evoeval/resolve/1ce96bdf13fc1fd4b19ec484fd412578114f535b/clinvar/clinvar.parquet",
+      "sha256": "6aa4f088405a09dfd52de263e921d6f3b13f8cf3ba3fb0e368e407b7471d0e78",
+      "license": "arcinstitute/evoeval, MIT. Underlying ClinVar records are public domain (NCBI).",
+      "provenance": "Arc's ClinVar evaluation table (GRCh38): 200,036 two-star-or-better P/LP and B/LB variants with SnpEff annotation."
+    },
+    {
+      "path": "data/raw/hg38.fa.gz",
+      "source": "https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/hg38.fa.gz",
+      "sha256": "c1dd87068c254eb53d944f71e51d1311964fce8de24d6fc0effc9c61c01527d4",
+      "license": "UCSC Genome Browser hg38 (GRC GRCh38), freely available for any use.",
+      "provenance": "GRCh38 genome, UCSC build of 2014 (MD5 1c9dcaddfa41027f17cd8f7a82c7293b as published in UCSC md5sum.txt)."
+    },
+    {
+      "path": "data/reference/evo2ops_p3_w1_brca1_scores.tsv",
+      "source": "https://raw.githubusercontent.com/rewire-bio/evo2-size-by-use-case/main/data/reference/evo2ops_p3_w1_brca1_scores.tsv",
+      "sha256": "c76d845efd76543aa5237133c215f9c137436aa92caa736946d163ae50a4e942",
+      "license": "Rewire Bio study output; same terms as this repository.",
+      "provenance": "Evo 2 7B per-variant BRCA1 scores from evo2-cloud-operations recorded run b75c67aa959b424c88fd49bcce4d16b5 (code revision e93491a, image sha256:22970720...), platform P3, Runpod H100 80GB HBM3, attempt 1, forward-pass loss 0.34765625 (passed). Copied unchanged from that run's w1_brca1_scores.tsv; committed here because that study's evidence archive was not yet published."
+    }
+  ]
+}
