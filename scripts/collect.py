@@ -22,6 +22,14 @@ MIN_STRATUM_POSITIVES = 20
 REFERENCE_SCORES = "data/reference/evo2ops_p3_w1_brca1_scores.tsv"
 
 
+def load_config(path: Path, root: Path = ROOT) -> dict:
+    """A run configuration with its tier definitions resolved from `tiers_file`."""
+    config = json.loads(Path(path).read_text())
+    if "tiers_file" in config:
+        config["tiers"] = json.loads((root / config["tiers_file"]).read_text())["tiers"]
+    return config
+
+
 def read_json(path: Path):
     return json.loads(path.read_text()) if path.exists() else None
 

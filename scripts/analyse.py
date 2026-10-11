@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
 
 import matplotlib
@@ -156,7 +157,10 @@ def main() -> None:
     args = parser.parse_args()
     results = json.loads((args.results / "results.json").read_text())
     operations = json.loads((args.results / "operations.json").read_text())
-    config = json.loads((ROOT / "configs/full.json").read_text())
+    sys.path.insert(0, str(ROOT / "scripts"))
+    from collect import load_config
+
+    config = load_config(ROOT / "configs/full.json")
     figures, generated = ROOT / "paper/figures", ROOT / "paper/generated"
     figures.mkdir(parents=True, exist_ok=True)
     generated.mkdir(parents=True, exist_ok=True)

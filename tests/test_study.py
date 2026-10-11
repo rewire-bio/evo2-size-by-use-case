@@ -164,7 +164,8 @@ class CollectTests(unittest.TestCase):
 
         from collect import assemble
 
-        config = json.loads((ROOT / "configs/full.json").read_text())
+        from collect import load_config
+        config = load_config(ROOT / "configs/full.json")
         config["bootstrap"]["n"] = 50
         brca1 = pd.read_csv(ROOT / "data/derived/brca1_variants.tsv", sep="\t")
         clinvar = pd.read_csv(ROOT / "data/derived/clinvar_noncoding_nonsnv.tsv", sep="\t")
@@ -260,3 +261,43 @@ class WeightTests(unittest.TestCase):
     def test_every_pinned_model_has_an_expected_forward_loss(self):
         from evo2size import pins
         self.assertEqual(set(pins.WEIGHTS), set(pins.FORWARD_TEST_LOSS))
+
+
+class ReuseTests(unittest.TestCase):
+    """Phase reuse copies tiers only from a completed run of the right phase, approval and code."""
+
+    def make_run(self, root: Path, ident: str, phase: str, status: str, protocol: str, src_tree: str, finished: str):
+        import json
+        folder = root / ".research/runs" / ident
+        (folder / "output/tiers/T2/attempt-1").mkdir(parents=True)
+        (folder / "output/tiers/T2/attempt-1/receipt.json").write_text(json.dumps({"run": ident}))
+        (folder / "output/provenance.json").write_text(json.dumps({"src_tree": src_tree}))
+        (folder / "manifest.json").write_text(json.dumps({
+            "id": ident, "status": status, "config": {"phase": phase}, "protocol_hash": protocol,
+            "code_revision": "abc", "finished_at": finished}))
+
+    def test_reuse_picks_the_latest_matching_run_and_refuses_changed_code(self):
+        import json
+        import tempfile
+        from unittest import mock
+
+        import experiment
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / ".research").mkdir()
+            (root / ".research/approval.json").write_text(json.dumps({"protocol_hash": "P"}))
+            self.make_run(root, "old", "a", "completed", "P", "TREE", "2026-10-11T01:00:00")
+            self.make_run(root, "new", "a", "completed", "P", "TREE", "2026-10-11T02:00:00")
+            self.make_run(root, "failed", "a", "failed", "P", "TREE", "2026-10-11T03:00:00")
+            self.make_run(root, "other-approval", "a", "completed", "Q", "TREE", "2026-10-11T04:00:00")
+            with mock.patch.object(experiment, "ROOT", root):
+                out = root / "out"
+                record = experiment.reuse_tiers({"from_phase": "a", "tiers": ["T2"]}, out, "TREE")
+                self.assertEqual(record["from_run"], "new")
+                copied = json.loads((out / "tiers/T2/attempt-1/receipt.json").read_text())
+                self.assertEqual(copied["run"], "new")
+                with self.assertRaises(SystemExit):
+                    experiment.reuse_tiers({"from_phase": "a", "tiers": ["T2"]}, root / "out2", "CHANGED")
+                with self.assertRaises(SystemExit):
+                    experiment.reuse_tiers({"from_phase": "b", "tiers": ["T2"]}, root / "out3", "TREE")

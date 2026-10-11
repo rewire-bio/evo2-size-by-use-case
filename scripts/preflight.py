@@ -36,8 +36,11 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", type=Path, required=True)
     args = parser.parse_args()
-    config = json.loads(args.config.read_text())
-    tiers = [t for t in config["tiers"] if not t.get("deferred")]
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from collect import load_config
+
+    config = load_config(args.config)
+    tiers = [t for t in config["tiers"] if t["id"] in config["run_tiers"]]
     problems = []
 
     planned = sum(PLANNED_USD[t["id"]] for t in tiers)

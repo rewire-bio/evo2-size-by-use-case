@@ -146,8 +146,10 @@ count only.
 
 ## Analysis plan and stopping conditions
 
-Each tier runs once from a clean committed revision through `research run`. Tiers may run at the
-same time. Outputs, receipts and logs are kept. Failed attempts are kept and reported.
+Each tier runs once from a clean committed revision through `research run`. Tiers run in phases
+(amendment 2): phase A runs T2, phase B runs T3 and T4, and phase C runs the CPU tiers when the
+owner asks. Each later phase copies the earlier tiers' outputs, so its results cover every tier.
+Tiers within a phase may run at the same time. Outputs, receipts and logs are kept. Failed attempts are kept and reported.
 
 - Stop a tier after 2 failed attempts. If capacity cannot be obtained within those attempts, the
   tier is reported as unavailable, not substituted.

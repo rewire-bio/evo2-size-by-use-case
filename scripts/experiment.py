@@ -21,7 +21,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
-from collect import assemble, forward_tests_passed  # noqa: E402
+from collect import assemble, forward_tests_passed, load_config, read_json  # noqa: E402
 from data import verify_data  # noqa: E402
 
 BUNDLE_DATA = {
@@ -98,6 +98,35 @@ def run_chain(chain: list[dict], image: str, bundle: Path, output: Path, code_sh
     return outcomes
 
 
+def reuse_tiers(reuse: dict, output: Path, src_tree: str) -> dict:
+    """Copy tier outputs from the latest completed recorded run of an earlier phase.
+
+    The source run must belong to the current approval and have used the same study code (git tree
+    of src/), so the copied tiers are what this run would have produced. Otherwise refuse.
+    """
+    approval = read_json(ROOT / ".research/approval.json")
+    if approval is None:
+        raise SystemExit("No protocol approval found; tiers can only be reused inside recorded runs.")
+    candidates = []
+    for manifest_path in (ROOT / ".research/runs").glob("*/manifest.json"):
+        manifest = read_json(manifest_path)
+        if (manifest.get("status") == "completed" and manifest.get("config", {}).get("phase") == reuse["from_phase"]
+                and manifest.get("protocol_hash") == approval["protocol_hash"]):
+            candidates.append(manifest)
+    if not candidates:
+        raise SystemExit(f"No completed phase {reuse['from_phase']} run under the current approval to reuse.")
+    source = max(candidates, key=lambda m: m["finished_at"])
+    source_output = ROOT / ".research/runs" / source["id"] / "output"
+    source_provenance = read_json(source_output / "provenance.json")
+    if source_provenance["src_tree"] != src_tree:
+        raise SystemExit(f"Run {source['id']} used different study code (src tree "
+                         f"{source_provenance['src_tree']}, now {src_tree}); its tiers cannot be reused.")
+    for tier_id in reuse["tiers"]:
+        shutil.copytree(source_output / "tiers" / tier_id, output / "tiers" / tier_id)
+    return {"from_run": source["id"], "from_phase": reuse["from_phase"], "tiers": reuse["tiers"],
+            "source_code_revision": source["code_revision"], "src_tree": src_tree}
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", type=Path, required=True)
@@ -106,14 +135,14 @@ def main() -> None:
     parser.add_argument("--collect-only", action="store_true", help="Rebuild results from existing outputs")
     parser.add_argument("--allow-dirty", action="store_true", help="Smoke testing only; not for recorded runs")
     args = parser.parse_args()
-    config = json.loads(args.config.read_text())
+    config = load_config(args.config)
     if config.get("study_kind") != "evo2_size_by_use_case":
         raise SystemExit("Unexpected study configuration")
     verify_data(ROOT / "data/manifest.json", ROOT)
     subprocess.run([sys.executable, str(ROOT / "scripts/prepare_inputs.py")], check=True)
 
     if not args.collect_only:
-        tiers = [t for t in config["tiers"] if not t.get("deferred")]
+        tiers = [t for t in config["tiers"] if t["id"] in config["run_tiers"]]
         if args.tiers:
             wanted = set(args.tiers.split(","))
             tiers = [t for t in tiers if t["id"] in wanted]
@@ -123,8 +152,10 @@ def main() -> None:
         stamp = dt.datetime.now(dt.UTC).strftime("%Y%m%dT%H%M%SZ")
         bundle = args.output / f"bundle-{stamp}"
         provenance = build_bundle(bundle, args.allow_dirty)
-        provenance.update({"started": stamp, "tiers": [t["id"] for t in tiers], "image": config["image"],
-                           "config_sha256": sha256(args.config)})
+        provenance.update({"started": stamp, "phase": config.get("phase"), "tiers": [t["id"] for t in tiers],
+                           "image": config["image"], "config_sha256": sha256(args.config)})
+        if config.get("reuse"):
+            provenance["reused"] = reuse_tiers(config["reuse"], args.output, provenance["src_tree"])
         (args.output / "provenance.json").write_text(json.dumps(provenance, indent=2) + "\n")
         # Tiers sharing a `chain` run in order (T1a then T1b); separate chains run at the same time.
         chains: dict[str, list[dict]] = {}

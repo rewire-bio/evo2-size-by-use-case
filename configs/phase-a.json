@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "mode": "full",
+  "study_kind": "evo2_size_by_use_case",
+  "image": "ghcr.io/rewire-bio/evo2-cloud-operations@sha256:22970720ff8bc05a00460a6066a70ed71951001aa52965141591a0ca6dcc968b",
+  "max_attempts": 2,
+  "bootstrap": {
+    "n": 2000,
+    "seed": 7
+  },
+  "criteria": {
+    "min_spearman": 0.99,
+    "max_auroc_abs_difference": 0.01,
+    "max_auroc_deficit_vs_40b": 0.02
+  },
+  "tiers_file": "configs/tiers.json",
+  "phase": "a",
+  "run_tiers": [
+    "T2"
+  ],
+  "note": "Amendment 2: L4 tier while the balance is low."
+}

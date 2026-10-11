@@ -29,3 +29,8 @@ Chronological record of every launch and probe, including failures. Times are UT
   Runpod balance is topped up. Pre-flight (`scripts/preflight.py`): balance USD 33.80 against USD
   69.60 needed (planned USD 43.60 for T2 to T4 plus one failed T4 attempt); one evo2-cloud-operations
   pod still running; L4, H100 and H200 Secure Cloud stock LOW.
+
+## 2026-10-11, phased runs
+
+- Balance USD 20.81, no pods running. Amendment 2 splits the GPU tiers into phase A (T2, now) and
+  phase B (T3, T4, after a top-up). Pre-flight for phase A passed (USD 7.20 needed).
